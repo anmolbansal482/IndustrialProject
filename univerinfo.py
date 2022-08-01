@@ -1,0 +1,59 @@
+#!C:\python27\python.exe
+# -*- coding: utf-8 -*-
+# import modules from cgi
+import cgi
+import os
+import sqlite3
+import Cookie
+
+db = sqlite3.connect ( "guidance.db" )
+c = db.cursor ( )
+form = cgi.FieldStorage()
+url = form.getvalue ( 'topu' )
+def cookie():
+    if 'HTTP_COOKIE' in os.environ:  # can access all cookies sent from the client using the HTTP_COOKIE
+        #  environment variable.
+        cookie_string = os.environ.get('HTTP_COOKIE')
+        e1 = Cookie.SimpleCookie()
+        e1.load(cookie_string)
+        username = e1['shop'].value
+        user = username[:4] + '..!'
+        print "<a id='dropdown-link2' data-target='user.py' href='user.py'role='button' >Hi@", user, "</a>"
+    else:
+        print "Hello Guest !"
+
+
+def signoutt():
+    if 'HTTP_COOKIE' in os.environ:  # can access all cookies sent from the client using the HTTP_COOKIE
+        #  environment variable.
+        cookie_string = os.environ.get('HTTP_COOKIE')
+        e1 = Cookie.SimpleCookie()
+        e1.load(cookie_string)
+        username = e1['shop'].value
+        print "<a id='dropdown-link2' data-target='signout.py' href='signout.py'role='button' >Sign Out!</a>"
+    else:
+        print "<a id='dropdown-link2' data-target='signin.py' href='signin.py'role='button' >Sign In!</a>"
+
+
+
+def logo():
+    c.execute ( 'SELECT * from topu where id = ?',(url,))
+    rows = c.fetchall ( )
+    for row in rows:
+        log = row[2]
+        print("../../docs/img/userloads/{}".format(log))
+
+def bg():
+    c.execute( 'SELECT * from topu where id = ?',(url,))
+    rows = c.fetchall()
+    for row in rows:
+        back = row[3]
+        print("<section class='page-title' data-parallax='scroll' data-image-src='../../docs/img/userloads/{}'>".format(back))
+
+
+def tit():
+    c.execute('SELECT * from topu where id=?',(url,))
+    rows = c.fetchall()
+    for row in rows:
+        title = row[1]
+        print(title)
